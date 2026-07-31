@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logo Crew — a character paints (or wires) your logo wall</title>
+<link rel="stylesheet" href="logo-crew.css">
+</head>
+<body>
+
+<!--
+  LOGO CREW
+  =========
+  A client-logo strip that is performed rather than scrolled.
+
+  Light theme  — a PAINTER carries a ladder and a paint kettle, plants them, climbs if the
+                 slot is high, dips, and brushes each logo onto the wall. Second pass: rolls
+                 white over the old mark and paints the next company straight on top of it.
+  Dark theme   — an ELECTRICIAN carries a cable coil and a work lamp. The wall starts black;
+                 the lamp cone is a real spot light, so logos only exist where it falls. He
+                 plugs each sign in, it sparks, and the charge crawls through the tube until
+                 the whole sign is lit — and stays lit after he walks on. Second pass: pull
+                 the plug, the sign flickers out, the panel rotates to the next company, plug
+                 back in.
+
+  Everything the tools touch is REAL coupling, not a timed CSS wipe:
+   • the brush footprint is stamped into the slot's coverage mask at the brush tip's own
+     position, so the logo appears exactly where the bristles went;
+   • the work lamp is a THREE.SpotLight — the wall is dark because nothing is lighting it;
+   • the charge crawl is a mask growing outward from the plug socket, so it starts where the
+     cable actually lands.
+
+  Files
+    logo-crew.css     page shell
+    js/crew-core.js   scene, camera, lights, layout, particles, audio
+    js/crew-surface.js  per-slot canvases: brush/roller stamping, neon build, drips
+    js/crew-props.js  ladder, kettle, brush, roller, lamp, cable, plug, headgear
+    js/crew-rig.js    GLB load, IK, walk cycle, carry / climb / reach poses
+    js/crew-show.js   the schedule, both choreographies, main loop, boot
+
+  Swap in your own character by replacing assets/puller.glb.js — any standard humanoid rig
+  works, the bone lookup strips a `mixamorig` prefix.
+-->
+
+<header class="page-head">
+  <p class="eyebrow">Web Animations · lab</p>
+  <h1>Logo Crew</h1>
+  <p class="sub">Ten client logos, five at a time — put up by hand, on a schedule, by someone
+    who has to carry their own ladder.</p>
+</header>
+
+<section class="strip" aria-labelledby="strip-h">
+  <h2 id="strip-h" class="sr">Trusted by</h2>
+
+  <div class="stage" id="stage">
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <p class="fallback" id="fallback">Logos: <span id="fallbackList"></span></p>
+  </div>
+
+  <!-- the real, always-present list. the canvas above is decoration on top of it. -->
+  <ul class="sr" id="srList"></ul>
+
+  <div class="controls">
+    <div class="seg" role="radiogroup" aria-label="Theme">
+      <button type="button" class="th" data-theme="light" role="radio" aria-checked="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.4v2.4M12 19.2v2.4M2.4 12h2.4M19.2 12h2.4M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/></svg>
+        Painter
+      </button>
+      <button type="button" class="th" data-theme="dark" role="radio" aria-checked="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.4 8.4 0 1 0 10.4 10.4Z"/></svg>
+        Electrician
+      </button>
+    </div>
+
+    <button type="button" id="sound" class="icon" aria-pressed="false" aria-label="Turn sound on">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="on"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4Z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.4a7.8 7.8 0 0 1 0 11.2"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="off"><path d="M4 9.5h3.5L12 5.5v13L7.5 14.5H4Z"/><path d="m16 9.6 4.4 4.8M20.4 9.6 16 14.4"/></svg>
+    </button>
+
+    <label class="speed">
+      <span>Pace</span>
+      <input id="speed" type="range" min="55" max="160" value="100" step="5" aria-label="Playback pace">
+      <output id="speedOut">1.0×</output>
+    </label>
+
+    <button type="button" id="playBtn" class="icon" aria-pressed="true" aria-label="Pause">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="on"><path d="M9 5v14M15 5v14"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="off"><path d="M7 4.5 19 12 7 19.5Z"/></svg>
+    </button>
+  </div>
+
+  <p class="scrub-wrap">
+    <input id="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Scrub the loop">
+    <span class="beat" id="beat">—</span>
+  </p>
+</section>
+
+<p class="sr" aria-live="polite" id="status"></p>
+
+<script src="vendor/three.bundle.js"></script>
+<script src="vendor/GLTFLoader.bundle.js"></script>
+<script src="assets/puller.glb.js"></script>
+<script src="js/crew-core.js"></script>
+<script src="js/crew-surface.js"></script>
+<script src="js/crew-props.js"></script>
+<script src="js/crew-rig.js"></script>
+<script src="js/crew-show.js"></script>
+</body>
+</html>
