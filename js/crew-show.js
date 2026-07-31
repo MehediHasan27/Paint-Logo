@@ -866,17 +866,17 @@ function connectBranch(s){
   if(!b) return;
   const sock = socketW(s, _a).clone();
   const busY = HUMAN.groundW + S.H*0.020;
-  const busP = V(CREW.wx(s.x - S.slotW*0.90, CFG.layout.wallZ), busY, CFG.layout.wallZ + 16);
+  const busP = V(CREW.wx(s.x - S.slotW*0.40, CFG.layout.wallZ), busY, CFG.layout.wallZ + 16);
   /* it leaves the socket downward, bellies out, and meets the floor run side-on — a straight
      line between the two reads as a scratch on the wall, not as a cable */
   const pts = [];
   const n = 24;
-  const belly = S.stature*0.16;
+  const belly = S.stature*0.055;
   for(let i=0;i<n;i++){
     const t = i/(n-1);
     const e = t*t*(3-2*t);
-    pts.push({ x:lerp(sock.x, busP.x, e) - Math.sin(Math.PI*t)*belly*0.55,
-               y:lerp(sock.y, busP.y, t*t),
+    pts.push({ x:lerp(sock.x, busP.x, e) - Math.sin(Math.PI*t)*belly,
+               y:lerp(sock.y, busP.y, t*t*(2-t)),
                z:lerp(sock.z, busP.z, e) + Math.sin(Math.PI*t)*S.stature*0.05 });
   }
   CREW.updateTube(b.mesh, pts, S.stature*0.016);
