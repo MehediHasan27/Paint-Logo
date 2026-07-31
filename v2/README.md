@@ -1,40 +1,71 @@
-# Paint-Logo
+# Paint-Logo — v2
 
-A simple experiment on how can we show logos on webpages apart from make them boring or an
-infinite marquee.
+A client-logo strip that is **performed** instead of scrolled. Ten logos, five at a time, put
+up by hand by a rigged 3D character who has to carry their own ladder.
 
-Ten client logos, five at a time, put up by hand by a rigged 3D character who has to carry
-their own ladder. Open `index.html` by double-clicking it — no build step, no server, no
-network.
+Open `index.html` by double-clicking it. No build step, no server, no network.
 
-**Live demo:** https://mehedihasan27.github.io/Paint-Logo/
+**v1 is still here and unchanged** — [live](https://mehedihasan27.github.io/Paint-Logo/) ·
+[source](../). This is v2, live at
+https://mehedihasan27.github.io/Paint-Logo/v2/
 
-There are two versions in this repo, both live:
+---
 
-| | | |
-| --- | --- | --- |
-| **v1** | [demo](https://mehedihasan27.github.io/Paint-Logo/) | the original — a five-tread A-frame she stands part way up |
-| **v2** | [demo](https://mehedihasan27.github.io/Paint-Logo/v2/) · [source](v2/) | ladder no longer clips through the character, and the dark theme starts black with every sign already on the wall |
+## What changed from v1
 
-v1 is kept as-is. Everything below describes it; see [v2/README.md](v2/README.md) for what
-changed and why.
+**1. The ladder no longer passes through the character.**
+
+v1 used a five-tread A-frame she stood part way up. That is geometrically hostile: every tread
+above her feet — and the top platform especially — occupies exactly the volume her shins are
+in. It is not a tuning problem, it is a collision with the design, and no amount of offsetting
+fixes it.
+
+v2 replaces it with a short three-step hop-up she stands on **top** of. Nothing on the ladder
+exists above the soles of her feet, so the intersection is gone by construction rather than by
+fudge. It is also what a painter actually carries one-handed for fascia height, and the shorter
+lift stops the derived logo row from being driven up into the ceiling.
+
+Two consequences fall out of that:
+
+- **The kettle (and the work lamp) are now held for the whole job.** v1 parked them on the
+  ladder's top shelf — which is where her shins ended up, and once the deck is the thing she
+  stands on there is nowhere to park anything anyway. Holding the kettle is what a painter
+  does, it gives the free arm a job, and it puts the paint within an easy dip. The `kitUp` /
+  `kitDown` beats are gone.
+- **The dip is now diagonal.** Straight down would need the hand a full brush-length above the
+  paint — higher than her own shoulder, because the brush is long and this rig's arm is short.
+  Angling it puts the grip out to the side, which is how it is really done.
+
+**2. Dark theme now starts black, with the logos already on the wall.**
+
+The signs are physically mounted from frame zero; there is simply nothing lighting them. The
+electrician walks in, throws the mains at a board on the left — spark, contactor stutter — and
+the whole wall comes up so every sign is visible at once as cold unlit glass. Only then does he
+go along energising them into neon one at a time.
+
+The first attempt at this panned his torch along the row instead, and it was worse: a long
+throw makes the beam cone enormous and grazing, so it lit nothing and hid everything behind it.
+The mains beat says "these were always here" in one move, and keeps the torch a torch.
+
+Everything else — the stamped-at-the-brush-tip reveal, the derived reach geometry, the
+second-pass wash-and-repaint, the neon charge crawl — is unchanged from v1.
 
 ---
 
 ## The two shows
 
-**Light theme — the painter.** She walks on carrying a stepladder in one hand and a paint
-kettle in the other, sets the ladder down under the first slot, puts the kettle on its top
-platform, climbs, loads the brush, and brushes the logo onto the wall. Down, pick everything
-up, two steps along, repeat. After the fifth she walks off, and the wall keeps what she
+**Light theme — the painter.** She walks on carrying a hop-up in one hand and a paint kettle in
+the other, sets the ladder down under the first slot, steps up onto its deck still holding the
+kettle, loads the brush, and brushes the logo onto the wall. Down, pick the ladder up, two
+steps along, repeat. After the fifth she walks off, and the wall keeps what she
 painted. Second pass: she rolls a coat of off-white over the old mark and paints the next
 company straight on top of it, exactly like a real painted sign — the old one is still under
 there, ghosting through at the edges.
 
-**Dark theme — the electrician.** The wall starts black. He carries a work lamp and a coil of
-cable; the lamp is a real `SpotLight`, so the signs are invisible until its cone falls on
-them. At each slot he hooks the lamp on the ladder, climbs, and pushes a plug into the
-socket: spark, and the charge crawls out through the tube until the whole sign is lit — and
+**Dark theme — the electrician.** The wall starts black with every sign already mounted on it,
+unlit. He walks in, throws the mains, and the room comes up enough to see all of them as cold
+glass. Then at each slot he sets the hop-up down, climbs it holding his work lamp, and pushes a
+plug into the socket: spark, and the charge crawls out through the tube until the whole sign is lit — and
 it stays lit after he has moved on. Second pass: pull the plug, the tube stutters out, the
 panel rotates on its mount to the next company, plug back in.
 
@@ -86,10 +117,10 @@ than a pixel constant, so the depth-to-reach ratio is identical on a phone and a
 | `logo-crew.css` | chrome only — the stage is one WebGL canvas |
 | `js/crew-core.js` | scene, camera, lights, wall, layout, particles, procedural audio |
 | `js/crew-surface.js` | per-slot canvases: brush/roller stamping, neon build, drips |
-| `js/crew-props.js` | stepladder, kettle, brush, roller, lamp, cable, plug, hard hat |
+| `js/crew-props.js` | hop-up, kettle, brush, roller, lamp, cable, plug, hard hat |
 | `js/crew-rig.js` | GLB load, analytic two-bone IK, gait, carry / climb / reach poses |
 | `js/crew-show.js` | the schedule, both choreographies, main loop, boot |
-| `vendor/` | three.js + GLTFLoader, repacked as classic scripts so `file://` works |
+| `vendor/` | three.js r185 + GLTFLoader, repacked as classic scripts so `file://` works |
 | `assets/puller.glb.js` | the rigged humanoid, base64'd into a classic script |
 
 ## Making it yours
@@ -101,8 +132,8 @@ than a pixel constant, so the depth-to-reach ratio is identical on a phone and a
   canvas; everything downstream works off the artwork's own ink bounds.
 - **Character** — replace `assets/puller.glb.js`. Any standard humanoid rig works; the bone
   lookup strips a `mixamorig` prefix, and every proportion is measured rather than assumed.
-- **Pace** — the slider, or `CFG.pace`. One pass is ~18s at 1.0×; the full ten-logo loop is
-  ~40s. Without the ladder business a pass would be nearer 12s — the ladder is what buys the
+- **Pace** — the slider, or `CFG.pace`. One pass is ~16s at 1.0×; the full ten-logo loop is
+  ~36s light / ~40s dark. Without the ladder business a pass would be nearer 12s — the ladder is what buys the
   story, and it costs about six seconds a pass.
 - **Tunables** — everything worth turning is in `CFG` at the top of `crew-core.js`.
 
@@ -123,25 +154,15 @@ touching the brush both look fine.
 
 ## Notes and limits
 
-- ~57k triangles / 59 draw calls in the light theme, ~92k / 95 in the dark one.
-- The payload is 4.6 MB, almost all of it `vendor/three.bundle.js` and the base64'd rig. On a
-  real site, serve the rig as a plain `.glb` over HTTP instead — the base64 is only there so
-  the page works from `file://`, and dropping it saves ~600 KB plus the decode.
+- The character is a three.js example asset (Mixamo-derived). Check its licence before
+  shipping; swapping it is one file.
+- The row height is derived from the deck height (`CFG.ladder.deckH`, which must match
+  `STEP_TOP` in `crew-props.js`). Change one without the other and the reach budget goes with
+  it.
+- The GLB is base64'd into a classic script because `fetch()` is blocked on `file://` and
+  this has to open by double-click. Served over HTTP you can load the `.glb` directly.
 - His head clips the bottom edge of the slot he is working on by a few pixels at some sizes.
   That is the cost of putting the row as high as his reach allows; `S.headClears` reports it.
-- Sound is synthesised (no audio files) and starts off — browsers need a gesture first.
-- Reduced-motion is respected for the incidental motion but the loop still plays; if you need
-  it fully still, gate `SHOW.playing` on `prefers-reduced-motion`.
-
-## Licence and third-party assets
-
-The code in this repository is MIT — see [LICENSE](LICENSE).
-
-That does **not** cover the bundled third-party assets, which keep their own terms:
-
-- `vendor/three.bundle.js`, `vendor/GLTFLoader.bundle.js` — [three.js](https://threejs.org),
-  MIT, repacked here as classic scripts so the page runs over `file://`.
-- `assets/puller.glb.js` — a rigged humanoid derived from a three.js example character
-  (Mixamo lineage). **Check its licence before using this commercially.** Swapping it is one
-  file; nothing in the rig code assumes that particular skeleton beyond standard humanoid
-  bone names.
+- Sound is synthesised (no files) and starts off — browsers need a gesture first.
+- Reduced-motion is respected for the incidental motion but the loop still plays; if you
+  need it fully still, gate `SHOW.playing` on `prefers-reduced-motion`.
